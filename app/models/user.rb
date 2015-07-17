@@ -6,6 +6,11 @@ class User < ActiveRecord::Base
   validates :username, presence: true
   validates :email, presence: true
 
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+    end
+  end
+
   private
 
   def update_access_token!
