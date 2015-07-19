@@ -11,35 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150717063855) do
+ActiveRecord::Schema.define(version: 20150719185848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
 
   create_table "authentications", force: :cascade do |t|
-    t.string "uid",      null: false
-    t.string "provider", null: false
-    t.string "token",    null: false
+    t.string  "uid",      null: false
+    t.string  "provider", null: false
+    t.string  "token",    null: false
+    t.integer "user_id",  null: false
   end
 
-  create_table "authentications_users", force: :cascade do |t|
-    t.integer  "authentication_id"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "authentications_users", ["authentication_id", "user_id"], name: "index_authentications_users_on_authentication_id_and_user_id", unique: true, using: :btree
+  add_index "authentications", ["user_id"], name: "index_authentications_on_user_id", using: :btree
 
   create_table "github_accounts", force: :cascade do |t|
-    t.string "uid",          null: false
-    t.string "username",     null: false
-    t.string "display_name", null: false
-    t.string "email",        null: false
-    t.hstore "raw"
+    t.string  "uid",               null: false
+    t.string  "username",          null: false
+    t.string  "display_name",      null: false
+    t.string  "email",             null: false
+    t.hstore  "raw"
+    t.integer "authentication_id", null: false
+    t.string  "token"
   end
 
+  add_index "github_accounts", ["authentication_id"], name: "index_github_accounts_on_authentication_id", using: :btree
   add_index "github_accounts", ["raw"], name: "index_github_accounts_on_raw", using: :gin
 
   create_table "users", force: :cascade do |t|
@@ -55,6 +52,9 @@ ActiveRecord::Schema.define(version: 20150717063855) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
+    t.string   "username",                            null: false
+    t.string   "uuid",                                null: false
+    t.string   "access_token"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
