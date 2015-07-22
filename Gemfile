@@ -5,7 +5,7 @@ gem 'rails-api', '~> 0.4.0'
 gem 'active_model_serializers', '~> 0.8.3' # NOTE: not the 0.9
 gem 'pg', '~> 0.18.2'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'thin'
+gem "puma"
 gem 'devise', '~> 3.5.1'
 gem 'rack-cors', :require => 'rack/cors'
 
