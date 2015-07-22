@@ -8,7 +8,7 @@ module V1
       @user = User.from_omniauth(user_params)
 
       if @user.save # The user has either been created or fetched via the auth provider
-        render json: @user, serializer: V1::User::CreateSerializer, root: nil
+        render json: @user, serializer: V1::CreateSerializer, root: nil
       else
         render json: { error: t('user_create_error') }, status: :unprocessable_entity
       end

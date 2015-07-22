@@ -4,11 +4,13 @@ module V1
 
     # POST /v1/login
     def create
-      @user = User.find_for_database_authentication(email: params[:user][:email])
+      @user = User.where({uuid: params[:uuid], access_token: params[:access_token]}).take
 
       return invalid_login_attempt unless @user
-      if @user.valid_password?(params[:user][:password])
+      if @user
+        @user.refresh_access_token
         sign_in :user, @user
+        # Implicit namespaced to V1::SessionSerializer
         render json: @user, serializer: SessionSerializer, root: nil
       else
         invalid_login_attempt
