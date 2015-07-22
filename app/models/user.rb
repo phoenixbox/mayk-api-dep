@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
   def self.from_omniauth(params)
     auth = Authentication.where(uid: params['account']['id'], token: params['token']).take
 
+    # If that Authentication doesnt exist for the user then craete it
     if !auth
       password = Devise.friendly_token[0,20]
       user = User.create!({
@@ -24,6 +25,7 @@ class User < ActiveRecord::Base
       user.createAuthentication(params)
       user
     else
+      # That auth exists so just return the user
       auth.user
     end
   end
@@ -39,7 +41,6 @@ class User < ActiveRecord::Base
   end
 
   def createGithubAccount(auth, params)
-
     GithubAccount.create({
       :uid => params['account']['id'],
       :username => params['account']['username'],
@@ -48,6 +49,10 @@ class User < ActiveRecord::Base
       :raw => params['account']['raw'],
       :authentication_id => auth.id
     })
+  end
+
+  def refresh_access_token
+    self.access_token = "#{self.uuid}:#{Devise.friendly_token}"
   end
 
   private
