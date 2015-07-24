@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
       :display_name => params['account']['displayName'],
       :email => params['account']['email'],
       :raw => params['account']['raw'],
+      :token => auth.token,
       :authentication_id => auth.id
     })
   end
